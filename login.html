@@ -1,34 +1,103 @@
 <!DOCTYPE html>
+<!-- Declares this as an HTML5 document - tells the browser how to interpret the file -->
 <html lang="en">
+<!-- Root HTML element with language attribute set to English for accessibility and SEO -->
 
 <head>
+    <!-- Head section contains metadata and resources that don't appear in the page body -->
+
     <meta charset="UTF-8">
+    <!-- Sets character encoding to UTF-8 to support international characters and special symbols -->
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Makes the page responsive - sets initial zoom level and width to match device screen -->
+
     <title>Erp Login</title>
+    <!-- Sets the page title that appears in the browser tab -->
+    <!-- MINOR ISSUE: Inconsistent capitalization - other pages use "Nexgen ERP" -->
+
     <link rel="stylesheet" href="./css/login.css">
+    <!-- Links the external CSS file for styling the login page -->
+    <!-- NOTE: Missing favicon/shortcut icon unlike other pages (inventory.html has one) -->
 </head>
 
 <body>
+    <!-- Body section contains all visible page content -->
+
     <div class="ring">
+        <!-- Container div with class "ring" - likely creates an animated ring effect around the login form -->
+
         <i style="--clr:#00ff0a;"></i>
+        <!-- Empty <i> tag used as a decorative element (not for italics) -->
+        <!-- Uses CSS custom property --clr to set color to green (#00ff0a) -->
+        <!-- This is likely animated via CSS to create part of the ring effect -->
+
         <i style="--clr:#ff0057;"></i>
+        <!-- Second decorative element with pink/red color (#ff0057) -->
+        <!-- Part of the animated ring decoration -->
+
         <i style="--clr:#fffd44;"></i>
+        <!-- Third decorative element with yellow color (#fffd44) -->
+        <!-- Completes the three-color animated ring effect -->
+
         <div class="login">
+            <!-- Container for the actual login form and content -->
+
             <h2>Welcome Back</h2>
+            <!-- Main heading for the login page -->
+
             <form id="loginForm">
+                <!-- Login form element with ID "loginForm" -->
+                <!-- JavaScript uses this ID to attach submit event listener -->
+                <!-- ISSUE: No action or method attributes (though they're handled by JavaScript) -->
+
                 <div class="inputBx">
+                    <!-- Container div for username input field -->
+
                     <input type="text" placeholder="Username">
+                    <!-- Text input field for username -->
+                    <!-- CRITICAL ISSUE: Missing name and id attributes! -->
+                    <!-- Without name/id, accessing this value in JavaScript is difficult -->
+                    <!-- Currently accessed using e.target[0].value which is fragile -->
+                    <!-- Should have: name="username" id="username" -->
+                    <!-- ISSUE: No validation attributes (required, minlength, etc.) -->
                 </div>
+
                 <div class="inputBx">
+                    <!-- Container div for password input field -->
+
                     <input type="password" placeholder="Password">
+                    <!-- Password input field (text is masked with dots/asterisks) -->
+                    <!-- CRITICAL ISSUE: Missing name and id attributes! -->
+                    <!-- Without name/id, accessing this value in JavaScript is difficult -->
+                    <!-- Currently accessed using e.target[1].value which is fragile -->
+                    <!-- Should have: name="password" id="password" -->
+                    <!-- ISSUE: No validation attributes (required, minlength, pattern, etc.) -->
                 </div>
+
                 <div class="inputBx">
+                    <!-- Container div for submit button -->
+
                     <input type="submit" value="Sign in">
+                    <!-- Submit button that triggers form submission -->
+                    <!-- When clicked, fires the 'submit' event on the form -->
+                    <!-- The value attribute sets the button text to "Sign in" -->
                 </div>
             </form>
+            <!-- End of form element -->
         </div>
+        <!-- End of login container -->
+
         <script type="module" src="./js/login.js"></script>
+        <!-- Links the JavaScript file that handles login logic -->
+        <!-- type="module" enables ES6 module features (import/export) -->
+        <!-- ISSUE: Script tag is inside the .ring div instead of at the end of body -->
+        <!-- Best practice is to place scripts just before closing </body> tag -->
+        <!-- However, with type="module", scripts are deferred by default so this works -->
     </div>
+    <!-- End of ring container -->
 </body>
+<!-- End of body section -->
 
 </html>
+<!-- End of HTML document -->
