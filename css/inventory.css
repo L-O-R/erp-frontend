@@ -1,0 +1,174 @@
+.dashboard_main__inventory__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2% 4%;
+}
+
+
+.dashboard_main__inventory__header h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 110%;
+}
+
+.dashboard_main__inventory__header p {
+    font-size: 1.5rem;
+    line-height: 110%;
+    font-weight: 400;
+    margin-top: 1%;
+}
+
+.dashboard_main__inventory__header>div:nth-child(2) {
+    flex-basis: 40%;
+    display: flex;
+    gap: 2%;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.dashboard_main__inventory__header>div:nth-child(2) button {
+    padding: 1% 2%;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+
+.filterSection,
+.tableSection {
+    background: #fff;
+    box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.2);
+    padding: 2%;
+    border-radius: 12px;
+    margin-top: 2%;
+}
+
+.filterSection label {
+    display: none;
+}
+
+.filterSection input {
+    padding: 1%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 1.4rem;
+}
+
+
+.tableSection table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableSection table th {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.tableSection table th,
+.tableSection table td {
+    border: 1px solid #ccc;
+    padding: 1%;
+    text-align: center;
+}
+
+
+.tableSection table td {
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+
+.tableSection span {
+    display: block;
+    margin-top: 1.5%;
+    font-size: 1.2rem;
+    color: #8d8b8b;
+}
+
+
+/* dialog box css */
+#addProductDialog {
+    margin: auto;
+    padding: auto;
+    border: 0;
+    border-radius: 12px;
+    padding: 2%;
+}
+
+.addProduct_form_section {
+    /* padding: 3%; */
+    min-width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.addProduct_form_section header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.addProduct_form_section header h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 110%;
+}
+
+.addProduct_form_section #closeAddProductDialog {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 2% 4%;
+    transition: all 0.3s ease-in-out;
+}
+
+#closeAddProductDialog:hover {
+    background-color: #ff0000;
+    color: #ffffff;
+}
+
+
+.addProduct_form_section form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.addProduct_form_section form label {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 110%;
+}
+
+.addProduct_form_section form input,
+.addProduct_form_section form select {
+    padding: 1.5%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+
+.addProduct_form_section form button {
+    padding: 3% 4%;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease-in-out;
+}

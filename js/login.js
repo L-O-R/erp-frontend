@@ -1,5 +1,11 @@
+import { user_logged_in } from "./storage.js"
+
 const username = 'admin'
 const password = 'admin123'
+
+if (user_logged_in) {
+    window.location.href = 'index.html'
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm')
