@@ -1,174 +1,377 @@
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg-main: #f8fafc;
+    --bg-card: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+    /* Status Colors */
+    --status-in-stock-bg: #dcfce7;
+    --status-in-stock-text: #166534;
+    --status-low-stock-bg: #fef9c3;
+    --status-low-stock-text: #854d0e;
+    --status-out-stock-bg: #fee2e2;
+    --status-out-stock-text: #991b1b;
+}
+
+/* Accessibility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.dashboard_main {
+    padding: 2rem;
+    background-color: var(--bg-main);
+    min-height: 100vh;
+}
+
 .dashboard_main__inventory__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2% 4%;
+    margin-bottom: 2rem;
 }
 
-
 .dashboard_main__inventory__header h2 {
-    font-size: 2.4rem;
-    font-weight: 700;
-    line-height: 110%;
+    font-size: 2rem;
+    color: var(--text-main);
+    font-weight: 800;
 }
 
 .dashboard_main__inventory__header p {
-    font-size: 1.5rem;
-    line-height: 110%;
-    font-weight: 400;
-    margin-top: 1%;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
 }
 
 .dashboard_main__inventory__header>div:nth-child(2) {
-    flex-basis: 40%;
     display: flex;
-    gap: 2%;
-    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.dashboard_main__inventory__header button {
+    padding: 0.75rem 1.5rem;
+    display: inline-flex;
     align-items: center;
-}
-
-.dashboard_main__inventory__header>div:nth-child(2) button {
-    padding: 1% 2%;
-    background-color: #000;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
+    gap: 0.5rem;
+    font-weight: 500;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1.5rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.95rem;
 }
 
+#addProductBtn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
 
-.filterSection,
-.tableSection {
-    background: #fff;
-    box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.2);
-    padding: 2%;
+#addProductBtn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+
+.dashboard_main__inventory__header button:first-child {
+    background-color: white;
+    border: 1px solid var(--border);
+    color: var(--text-main);
+}
+
+.dashboard_main__inventory__header button:first-child:hover {
+    background-color: #f1f5f9;
+}
+
+/* Filter Section */
+.filterSection {
+    background: var(--bg-card);
+    padding: 1.25rem;
     border-radius: 12px;
-    margin-top: 2%;
-}
-
-.filterSection label {
-    display: none;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
 }
 
 .filterSection input {
-    padding: 1%;
-    border: 1px solid #ccc;
-    border-radius: 5px;
     width: 100%;
-    font-size: 1.4rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background-color: #fcfcfc;
 }
 
+.filterSection input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    background-color: white;
+}
 
-.tableSection table {
+/* Table Section */
+.tableSection {
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.table_container {
+    width: 100%;
+    overflow-x: auto;
+    position: relative;
+    min-height: 200px;
+}
+
+table {
     width: 100%;
     border-collapse: collapse;
+    text-align: left;
 }
 
-.tableSection table th {
-    font-size: 1.4rem;
-    font-weight: 700;
+thead {
+    background-color: #f8fafc;
+    border-bottom: 1px solid var(--border);
 }
 
-.tableSection table th,
-.tableSection table td {
-    border: 1px solid #ccc;
-    padding: 1%;
+th {
+    padding: 1rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+td {
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background-color: #f8fafc;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status-in-stock {
+    background-color: var(--status-in-stock-bg);
+    color: var(--status-in-stock-text);
+}
+
+.status-low-stock {
+    background-color: var(--status-low-stock-bg);
+    color: var(--status-low-stock-text);
+}
+
+.status-out-of-stock {
+    background-color: var(--status-out-stock-bg);
+    color: var(--status-out-stock-text);
+}
+
+/* Action Buttons in Table */
+td button {
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-right: 0.5rem;
+}
+
+td button[id^="edit_"],
+td button[id^="update_"] {
+    background-color: #f1f5f9;
+    border: 1px solid var(--border);
+    color: var(--text-main);
+}
+
+td button[id^="edit_"]:hover {
+    background-color: #e2e8f0;
+}
+
+td button[id^="delete_"],
+td button[id^="cancel_"] {
+    background-color: #fff1f2;
+    border: 1px solid #fecaca;
+    color: #be123c;
+}
+
+td button[id^="delete_"]:hover {
+    background-color: #ffe4e6;
+}
+
+/* Empty State */
+.empty_state {
+    padding: 4rem 2rem;
     text-align: center;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 }
 
-
-.tableSection table td {
-    font-size: 1.2rem;
-    font-weight: 400;
+.empty_state svg {
+    color: var(--border);
 }
 
-
-.tableSection span {
-    display: block;
-    margin-top: 1.5%;
-    font-size: 1.2rem;
-    color: #8d8b8b;
+/* Table Footer */
+.table_footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background-color: #ffffff;
 }
 
+#inventory_summary {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
 
-/* dialog box css */
+/* Dialog Styling */
 #addProductDialog {
-    margin: auto;
-    padding: auto;
-    border: 0;
-    border-radius: 12px;
-    padding: 2%;
+    padding: 0;
+    border: none;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    max-width: 500px;
+    width: 90%;
+}
+
+#addProductDialog::backdrop {
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
 }
 
 .addProduct_form_section {
-    /* padding: 3%; */
-    min-width: 350px;
     display: flex;
     flex-direction: column;
-    gap: 40px;
 }
 
 .addProduct_form_section header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .addProduct_form_section header h2 {
-    font-size: 2.4rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    line-height: 110%;
 }
 
-.addProduct_form_section #closeAddProductDialog {
-    background-color: #000;
-    color: #fff;
+#closeAddProductDialog {
+    background: none;
     border: none;
-    border-radius: 5px;
+    color: var(--text-muted);
     cursor: pointer;
-    font-size: 1.2rem;
-    padding: 2% 4%;
-    transition: all 0.3s ease-in-out;
+    padding: 0.5rem;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    line-height: 1;
 }
 
 #closeAddProductDialog:hover {
-    background-color: #ff0000;
-    color: #ffffff;
+    background-color: #f1f5f9;
+    color: var(--text-main);
 }
-
 
 .addProduct_form_section form {
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1.25rem;
 }
 
-.addProduct_form_section form label {
-    display: block;
-    font-size: 1.2rem;
-    font-weight: 700;
-    line-height: 110%;
+.form_group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-.addProduct_form_section form input,
-.addProduct_form_section form select {
-    padding: 1.5%;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.form_group label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.form_group input,
+.form_group select {
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.95rem;
     width: 100%;
-    font-size: 1.2rem;
-    margin-top: 10px;
 }
 
+.form_group input:focus,
+.form_group select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
 
-.addProduct_form_section form button {
-    padding: 3% 4%;
-    background-color: #000;
-    color: #fff;
+.addProduct_form_section form button[type="submit"] {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background-color: var(--primary);
+    color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 1.2rem;
-    transition: all 0.3s ease-in-out;
+    transition: background-color 0.2s;
+}
+
+.addProduct_form_section form button[type="submit"]:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Edit Inputs in Table */
+td input,
+td select {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+td input:disabled {
+    background-color: #f8fafc;
+    border-color: var(--border);
+    color: var(--text-muted);
+    cursor: not-allowed;
 }

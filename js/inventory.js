@@ -1,224 +1,325 @@
+/**
+ * Inventory Management Module
+ * This script handles the CRUD operations for the product inventory, including
+ * adding, editing, deleting, and searching products. It persists data to localStorage.
+ */
+
 // ============================================================================
-// IMPORTS SECTION
+// IMPORTS
 // ============================================================================
 
-// Import the Inventory class from the classes folder to create new inventory objects
 import Inventory from "./classes/inventoryClasses.js";
-
-// Import the InventoryData array from storage.js which holds all inventory items
-// NOTE: This is imported as a regular import, which creates a reference to the exported value
 import { InventoryData } from "./storage.js";
-
 
 // ============================================================================
 // DOM ELEMENT REFERENCES
 // ============================================================================
 
-// Get reference to the "Add Product" button that opens the dialog
 const addProductBtn = document.getElementById("addProductBtn");
-
-// Get reference to the dialog element (modal) that contains the add/edit product form
 const addProductDialog = document.getElementById("addProductDialog");
-
-// Get reference to the button that closes the add product dialog (the X button)
 const closeAddProductDialog = document.getElementById("closeAddProductDialog");
-
-// Get reference to the form element inside the dialog for adding products
 const addProductForm = document.getElementById("addProductForm");
-
-// Get reference to the table body where inventory rows will be inserted
 const inventory_tableBody = document.getElementById("inventory_tableBody");
-
-// Get reference to the HTML template element that contains the table row structure
+const inventory_summary = document.getElementById("inventory_summary");
 const table_template = document.getElementById("table_template");
+const searchInput = document.getElementById("search");
+const emptyState = document.getElementById("emptyState");
+const exportCsvBtn = document.querySelector(".dashboard_main__inventory__header button:first-child");
 
-
-// ============================================================================
-// EVENT LISTENERS FOR DIALOG CONTROLS
-// ============================================================================
-
-// Add click event listener to the "Add Product" button
-addProductBtn.addEventListener("click", () => {
-    // Open the dialog as a modal (blocking the rest of the page)
-    addProductDialog.showModal();
-});
-
-// Add click event listener to the close button (X) in the dialog
-closeAddProductDialog.addEventListener("click", () => {
-    // Close the dialog modal
-    addProductDialog.close();
-});
-
+// Tracking current edit state to prevent multiple simultaneous edits
+let currentEditingRow = null;
 
 // ============================================================================
-// FORM SUBMISSION HANDLER - ADD NEW PRODUCT
+// UTILITY FUNCTIONS
 // ============================================================================
 
-// Add submit event listener to the product form
-addProductForm.addEventListener('submit', (e) => {
-    // Prevent the default form submission behavior (page reload)
-    e.preventDefault();
+/**
+ * Calculates product status based on quantity
+ * @param {number} quantity - The current quantity of the product
+ * @returns {string} - The status string (In Stock, Low Stock, or Out of Stock)
+ */
+function getProductStatus(quantity) {
+    const qty = parseInt(quantity);
+    if (qty > 10) return "In Stock";
+    if (qty >= 1) return "Low Stock";
+    return "Out of Stock";
+}
 
-    // Generate a unique ID using current timestamp in milliseconds
-    const id = new Date().getTime();
-
-    // Get product name from the first form input using array index
-    // POTENTIAL ISSUE: Using array indices is fragile - if form order changes, this breaks
-    const productName = e.target[0].value;
-
-    // Get product category from the second form input (dropdown/select)
-    const productCategory = e.target[1].value;
-
-    // Get product price from the third form input
-    // ISSUE: This is stored as a STRING, not a NUMBER - should use parseFloat() or Number()
-    const productPrice = e.target[2].value;
-
-    // Get product quantity from the fourth form input
-    // ISSUE: This is stored as a STRING, not a NUMBER - should use parseInt() or Number()
-    const productQuantity = e.target[3].value;
-
-    // Initialize product status with default value
-    let productStatus = "In Stock";
-
-    // Determine product status based on quantity
-    // MAJOR ISSUE: productQuantity is a STRING, so comparison with numbers will have unexpected behavior
-    // For example: "5" > 10 is false (correct), but "100" > 10 is also true (works by accident)
-    if (productQuantity > 10) {
-        productStatus = "In Stock";
-    } else if (productQuantity >= 1 && productQuantity < 10) {
-        // This condition checks if quantity is between 1 and 9
-        productStatus = "Low Stock";
-    }
-    else {
-        // If quantity is 0 or less (or invalid)
-        productStatus = "Out of Stock";
-    }
-
-    // Create a new Date object to store when this product was added
-    // MISSING SEMICOLON at the end of this line
-    const currentTimeStamp = new Date()
-
-    // Create a new Inventory object using the collected data
-    const inventory = new Inventory(id, productName, productCategory, productPrice, productQuantity, productStatus, currentTimeStamp);
-
-    // Add the new inventory object to the InventoryData array
-    // This modifies the array in memory
-    InventoryData.push(inventory);
-
-    // Save the updated InventoryData array to localStorage as a JSON string
-    // This persists the data across browser sessions
-    localStorage.setItem("InventoryData", JSON.stringify(InventoryData));
-
-    // Close the dialog after successfully adding the product
-    addProductDialog.close();
-
-    // Re-render the entire inventory table to show the new product
-    // NOTE: Function name has typo "rendenter" instead of "render"
-    // MISSING SEMICOLON at the end of this line
-    rendenter_inventory_data(InventoryData)
-
-    // Reset the form fields to empty values for next use
-    addProductForm.reset();
-}) // MISSING SEMICOLON at the end of this event listener
-
+/**
+ * Maps status strings to CSS classes for styling badges
+ * @param {string} status - The status string
+ * @returns {string} - The relevant CSS class name
+ */
+function getStatusClass(status) {
+    const map = {
+        "In Stock": "status-in-stock",
+        "Low Stock": "status-low-stock",
+        "Out of Stock": "status-out-of-stock"
+    };
+    return map[status] || "";
+}
 
 // ============================================================================
-// RENDER FUNCTION - DISPLAY INVENTORY DATA IN TABLE
+// CORE LOGIC - DATA RENDERING
 // ============================================================================
 
-// Comment has typo: "not lets" should be "now lets"
-//  not lets render the data
-
-// Function to render inventory data into the table
-// NOTE: Function name is misspelled - should be "render_inventory_data" not "rendenter_inventory_data"
-function rendenter_inventory_data(data) {
-    // Clear all existing rows from the table body (removes old data)
+/**
+ * Renders the inventory table based on the provided data array
+ * @param {Array} data - The array of inventory objects to display
+ */
+function renderInventory(data) {
+    // Clear the current table body
     inventory_tableBody.innerHTML = "";
 
-    // Loop through each inventory item in the data array
-    data.forEach((inventory) => {
-        // Clone the template content (creates a deep copy of the template structure)
-        // The 'true' parameter means deep clone (includes all child nodes)
-        const table_row = table_template.content.cloneNode(true);
+    // Toggle empty state visibility
+    if (data.length === 0) {
+        emptyState.style.display = "flex";
+    } else {
+        emptyState.style.display = "none";
+    }
 
-        // Get all the <td> (table data) elements from the cloned row
+    // Populate rows from data
+    data.forEach((inventory) => {
+        const table_row = table_template.content.cloneNode(true);
+        const tr = table_row.querySelector("tr");
+        tr.setAttribute("data-id", inventory.id);
+
         const td = table_row.querySelectorAll("td");
 
-        // Set the text content of each table cell with inventory data
-        td[0].textContent = inventory.productName;        // First column: Product Name
-        td[1].textContent = inventory.productCategory;    // Second column: Category
-        td[2].textContent = inventory.productPrice;       // Third column: Price
-        td[3].textContent = inventory.productQuantity;    // Fourth column: Quantity
-        td[4].textContent = inventory.productStatus;      // Fifth column: Status
+        // Populate table cells with product details
+        td[0].textContent = inventory.productName;
+        td[1].textContent = inventory.productCategory;
+        td[2].textContent = `${inventory.productPrice}`;
+        td[3].textContent = inventory.productQuantity;
 
-        // Set the HTML content for the actions column with Edit and Delete buttons
-        // ISSUE: Invalid HTML - there's an extra quotation mark after the id attribute: id='edit_${inventory.id}' "
-        // This creates malformed HTML: <button id='edit_123' "> instead of <button id='edit_123'>
-        td[5].innerHTML = `<button id='edit_${inventory.id}' ">Edit</button><button id ="delete_${inventory.id}">Delete</button>`;
+        // Render status as a stylized badge
+        const statusClass = getStatusClass(inventory.productStatus);
+        td[4].innerHTML = `<span class="status-badge ${statusClass}">${inventory.productStatus}</span>`;
 
-        // Append the populated row to the table body (adds it to the DOM)
+        // Action buttons container
+        td[5].innerHTML = `
+            <button id='edit_${inventory.id}' class="action-btn-edit">Edit</button>
+            <button id ="delete_${inventory.id}" class="action-btn-delete">Delete</button>
+        `;
+
         inventory_tableBody.appendChild(table_row);
 
-        // Add click event listener to the Edit button for this specific inventory item
-        // Gets the button by its dynamically created ID and attaches the editProduct function
+        // Attach event listeners to newly created action buttons
         document.getElementById(`edit_${inventory.id}`).addEventListener("click", () => editProduct(inventory.id));
-
-        // Add click event listener to the Delete button for this specific inventory item
-        // Gets the button by its dynamically created ID and attaches the deleteProduct function
         document.getElementById(`delete_${inventory.id}`).addEventListener("click", () => deleteProduct(inventory.id));
-    })
+    });
+
+    // Update the results summary text
+    inventory_summary.textContent = `Showing ${data.length} of ${InventoryData.length} products`;
 }
 
-
 // ============================================================================
-// EDIT PRODUCT FUNCTION
+// PRODUCT CRUD OPERATIONS
 // ============================================================================
 
-// Function to edit an existing product by its ID
+/**
+ * Handles the creation of a new product from the form submission
+ */
+addProductForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Collect data using FormData for robustness
+    const formData = new FormData(addProductForm);
+    const productName = document.getElementById("productName").value;
+    const category = document.getElementById("category").value;
+    const price = document.getElementById("price").value;
+    const quantity = document.getElementById("quantity").value;
+
+    const id = Date.now();
+    const status = getProductStatus(quantity);
+    const timestamp = new Date();
+
+    const newInventoryItem = new Inventory(
+        id,
+        productName,
+        category,
+        parseFloat(price),
+        parseInt(quantity),
+        status,
+        timestamp
+    );
+
+    // Update data source and persistence
+    InventoryData.push(newInventoryItem);
+    localStorage.setItem("InventoryData", JSON.stringify(InventoryData));
+
+    // UI Cleanup
+    addProductDialog.close();
+    addProductForm.reset();
+    renderInventory(InventoryData);
+});
+
+/**
+ * Initiates the inline edit mode for a specific product row
+ * @param {number} id - The unique ID of the product to edit
+ */
 function editProduct(id) {
-    // Find the inventory item with matching ID from the InventoryData array
-    const inventory = InventoryData.find((inventory) => inventory.id === id);
+    if (currentEditingRow && currentEditingRow !== id) {
+        cancelEdit();
+    }
 
-    // Open the dialog to show the form
-    addProductDialog.showModal();
+    const inventory = InventoryData.find(item => item.id === id);
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    const cells = row.querySelectorAll("td");
 
-    // Pre-fill the form fields with existing product data
-    addProductForm[0].value = inventory.productName;      // Set product name
-    addProductForm[1].value = inventory.productCategory;  // Set category
-    addProductForm[2].value = inventory.productPrice;     // Set price
-    addProductForm[3].value = inventory.productQuantity;  // Set quantity
+    currentEditingRow = id;
 
-    // MAJOR ISSUE: The edit functionality is INCOMPLETE!
+    // Transform cells into input fields
+    cells[0].innerHTML = `<input type="text" value="${inventory.productName}" id="edit_name_${id}">`;
+    cells[1].innerHTML = `
+        <select id="edit_category_${id}">
+            <option value="electronics" ${inventory.productCategory === "electronics" ? "selected" : ""}>Electronics</option>
+            <option value="accessories" ${inventory.productCategory === "accessories" ? "selected" : ""}>Accessories</option>
+            <option value="software" ${inventory.productCategory === "software" ? "selected" : ""}>Software</option>
+            <option value="hardware" ${inventory.productCategory === "hardware" ? "selected" : ""}>Hardware</option>
+            <option value="services" ${inventory.productCategory === "services" ? "selected" : ""}>Services</option>
+        </select>
+    `;
+    cells[2].innerHTML = `<input type="number" step="0.01" value="${inventory.productPrice}" id="edit_price_${id}">`;
+    cells[3].innerHTML = `<input type="number" value="${inventory.productQuantity}" id="edit_quantity_${id}">`;
+    cells[4].innerHTML = `<input type="text" value="${inventory.productStatus}" disabled id="edit_status_${id}">`;
+
+    // Update action buttons to Save/Cancel
+    cells[5].innerHTML = `
+        <button id='update_${id}'>Update</button>
+        <button id="cancel_${id}">Cancel</button>
+    `;
+
+    document.getElementById(`update_${id}`).addEventListener("click", () => updateProduct(id));
+    document.getElementById(`cancel_${id}`).addEventListener("click", () => cancelEdit());
 }
 
+/**
+ * Validates and saves changes made during inline editing
+ * @param {number} id - The ID of the product being updated
+ */
+function updateProduct(id) {
+    const newName = document.getElementById(`edit_name_${id}`).value;
+    const newCategory = document.getElementById(`edit_category_${id}`).value;
+    const newPrice = document.getElementById(`edit_price_${id}`).value;
+    const newQuantity = document.getElementById(`edit_quantity_${id}`).value;
 
-// ============================================================================
-// DELETE PRODUCT FUNCTION
-// ============================================================================
+    if (!newName || !newPrice || !newQuantity) {
+        alert("Please fill in all required fields.");
+        return;
+    }
 
-// Function to delete a product by its ID
+    const index = InventoryData.findIndex(item => item.id === id);
+    if (index !== -1) {
+        InventoryData[index].productName = newName;
+        InventoryData[index].productCategory = newCategory;
+        InventoryData[index].productPrice = parseFloat(newPrice);
+        InventoryData[index].productQuantity = parseInt(newQuantity);
+        InventoryData[index].productStatus = getProductStatus(newQuantity);
+
+        localStorage.setItem("InventoryData", JSON.stringify(InventoryData));
+        currentEditingRow = null;
+        renderInventory(InventoryData);
+    }
+}
+
+/**
+ * Exits edit mode and restores the table state
+ */
+function cancelEdit() {
+    currentEditingRow = null;
+    renderInventory(InventoryData);
+}
+
+/**
+ * Removes a product from the inventory after confirmation
+ * @param {number} id - The ID of the product to delete
+ */
 function deleteProduct(id) {
-    // Show an alert message to the user
-    // ISSUE: No confirmation dialog - product is deleted immediately without asking "Are you sure?"
-    alert("Product deleted successfully");
+    const confirmed = confirm("Are you sure you want to delete this product? This action cannot be undone.");
 
-    // Create a new array containing all inventory items EXCEPT the one with matching ID
-    // The filter method creates a new array with items where the condition is true
-    let newInventoryData = InventoryData.filter((inventory) => inventory.id !== id);
-
-    // Save the filtered array to localStorage (persists the deletion)
-    localStorage.setItem("InventoryData", JSON.stringify(newInventoryData));
-
-    // Re-render the table with the updated data (without the deleted item)
-    rendenter_inventory_data(newInventoryData);
+    if (confirmed) {
+        const index = InventoryData.findIndex(item => item.id === id);
+        if (index !== -1) {
+            InventoryData.splice(index, 1);
+            localStorage.setItem("InventoryData", JSON.stringify(InventoryData));
+            renderInventory(InventoryData);
+        }
+    }
 }
 
+// ============================================================================
+// SEARCH AND EXPORT
+// ============================================================================
+
+/**
+ * Filters the inventory table based on the search query
+ */
+searchInput.addEventListener("input", (e) => {
+    const query = e.target.value.toLowerCase();
+    const filteredData = InventoryData.filter(item =>
+        item.productName.toLowerCase().includes(query) ||
+        item.productCategory.toLowerCase().includes(query)
+    );
+    renderInventory(filteredData);
+});
+
+/**
+ * Export current inventory data to a CSV file
+ */
+exportCsvBtn.addEventListener("click", () => {
+    if (InventoryData.length === 0) {
+        alert("No data available to export.");
+        return;
+    }
+
+    const headers = ["ID", "Name", "Category", "Price", "Quantity", "Status", "Date Added"];
+    const csvContent = [
+        headers.join(","),
+        ...InventoryData.map(item => [
+            item.id,
+            `"${item.productName}"`,
+            `"${item.productCategory}"`,
+            item.productPrice,
+            item.productQuantity,
+            item.productStatus,
+            new Date(item.currentTimeStamp).toLocaleDateString()
+        ].join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `inventory_export_${Date.now()}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+});
 
 // ============================================================================
-// INITIAL RENDER ON PAGE LOAD
+// DIALOG CONTROLS
 // ============================================================================
 
-// Render all inventory data when the page first loads
-// This displays any existing inventory items from localStorage
-// MISSING SEMICOLON at the end of this line
-rendenter_inventory_data(InventoryData);
+addProductBtn.addEventListener("click", () => {
+    addProductDialog.showModal();
+});
+
+closeAddProductDialog.addEventListener("click", () => {
+    addProductDialog.close();
+});
+
+// Close dialog when clicking on the backdrop
+addProductDialog.addEventListener("click", (e) => {
+    if (e.target === addProductDialog) {
+        addProductDialog.close();
+    }
+});
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+
+// Perform initial render on page load
+renderInventory(InventoryData);
