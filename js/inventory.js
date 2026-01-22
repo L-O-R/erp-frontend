@@ -286,10 +286,13 @@ exportCsvBtn.addEventListener("click", () => {
             new Date(item.currentTimeStamp).toLocaleDateString()
         ].join(","))
     ].join("\n");
+    console.log(csvContent);
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
+    console.log(blob)
+    console.log(url)
     link.setAttribute("href", url);
     link.setAttribute("download", `inventory_export_${Date.now()}.csv`);
     link.style.visibility = 'hidden';
