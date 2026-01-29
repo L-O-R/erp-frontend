@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/employees.css">
 </head>
 
 <body>
@@ -26,23 +27,133 @@
                 </header>
                 <nav class="dashboard_sidebar__nav">
                     <ul>
-                        <li><a href="./index.html">Dashboard</a></li>
-                        <li><a href="./inventory.html">Inventory</a></li>
-                        <li><a href="./sales.html">Sales</a></li>
-                        <li><a href="./employees.html">Employee</a></li>
+                        <li>
+                            <a href="./index.html">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="./inventory.html">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+                                    <path
+                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                                    </path>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                </svg>
+                                <span>Inventory</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="./sales.html">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                                <span>Sales</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="./employees.html">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                <span>Employee</span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>
             <div>
                 <footer class="dashboard_sidebar__footer">
-                    <button>Logout</button>
+                    <button id="logOutBtn">Logout</button>
                 </footer>
             </div>
         </aside>
         <main class="dashboard_main">
-            this will be main
+            <header class="dashboard_main__inventory__header">
+                <div>
+                    <h2>Employees</h2>
+                    <p>Manage your Team Members</p>
+                </div>
+                <div>
+                    <button>Export Csv</button>
+                    <button id="addEmplyoeeBtn">Add Employee</button>
+                </div>
+            </header>
         </main>
     </div>
+    <dialog id="dialog_Emp">
+        <header>
+            <h2>Add Emplyoee</h2>
+            <hr>
+        </header>
+        <form id="emp_add_form">
+            <div>
+                <label for="full_name">Full Name*</label>
+                <input type="text" name="full_name" id="full_name" placeholder="full Name" required>
+            </div>
+            <div>
+                <label for="email">Email*</label>
+                <input type="email" name="email" id="email" placeholder="for eg. abc@gmail.com" required>
+            </div>
+            <div>
+                <div>
+                    <label for="emp_role">
+                        Emplyoee Role:
+                    </label>
+                    <select name="emp_role" id="emp_role"></select>
+                </div>
+                <div>
+                    <label for="emp_department">
+                        Emplyoee Department:
+                    </label>
+                    <select name="emp_department" id="emp_department"></select>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <label for="join_date">
+                        Joining Date:
+                    </label>
+                    <input type="date" id="join_date" required />
+                </div>
+                <div>
+                    <label for="emp_status">
+                        Emplyoee Status:
+                    </label>
+                    <select name="emp_status" id="emp_status">
+                        <option value="active">Active</option>
+                        <option value="in_active">In-Active</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button>Cancel</button>
+                <button>Add Employee</button>
+            </div>
+
+        </form>
+    </dialog>
+    <script src="./js/employee.js" type="module"></script>
 </body>
 
 </html>

@@ -1,0 +1,36 @@
+#dialog_Emp {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    padding: 3em;
+    box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.4);
+    border: none;
+    border-radius: 12px;
+    min-width: 30%;
+}
+
+#dialog_Emp>form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8em;
+}
+
+#dialog_Emp>form div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+
+#dialog_Emp input,
+#dialog_Emp select {
+    /* all: unset; */
+    /* border: 0; */
+    outline: 0;
+    padding: 0.6em 0.8em;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+}
