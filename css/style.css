@@ -19,13 +19,13 @@ a {
     justify-content: space-between;
     gap: 0;
     position: relative;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
 }
 
 .dashboard_main {
     flex: 1;
     padding: 20px;
-    overflow-y: auto;
+    /* overflow-y: auto; */
 }
 
 
@@ -33,14 +33,18 @@ a {
 .dashboard_sidebar {
     width: 280px;
     min-width: 280px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
     background-color: #252525;
     padding: 25px 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-self: flex-start;
     gap: 3em;
     box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
-    position: relative;
+    /* position: relative; */
     z-index: 100;
     transition: transform 0.3s ease-in-out;
 }
@@ -136,6 +140,16 @@ a {
 
 .dashboard_sidebar__nav ul li a:hover svg {
     transform: scale(1.1);
+}
+
+.dashboard_sidebar__nav ul li.active a {
+    background-color: #38bdf8;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+}
+
+.dashboard_sidebar__nav ul li.active a svg {
+    stroke: white;
 }
 
 .dashboard_sidebar__nav ul li a:active {

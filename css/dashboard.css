@@ -1,0 +1,71 @@
+.dashboard_main {
+    padding: 2rem 3rem;
+    background-color: #f8fafc;
+}
+
+.dashboard_header {
+    margin-bottom: 2.5rem;
+}
+
+.dashboard_header h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.025em;
+}
+
+.dashboard_header p {
+    color: #64748b;
+    margin-top: 0.25rem;
+    font-size: 1.1rem;
+}
+
+
+
+/* Charts Section */
+.charts_section {
+    display: grid;
+    grid-template-columns: 2.2fr 1.2fr;
+    gap: 1.5rem;
+}
+
+.chart_container {
+    background: white;
+    padding: 2rem;
+    border-radius: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.chart_wrapper {
+    position: relative;
+    flex-grow: 1;
+    min-height: 300px;
+    width: 100%;
+}
+
+.chart_container header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+}
+
+.chart_container h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.01em;
+}
+
+.chart_container p {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+}
+
+@media (max-width: 1024px) {
+    .charts_section {
+        grid-template-columns: 1fr;
+    }
+}

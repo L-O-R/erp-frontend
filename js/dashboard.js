@@ -1,64 +1,72 @@
-import { SalesData, InventoryData } from "./storage.js";
-const ctx = document.getElementById('barChart').getContext('2d');
-const ctx2 = document.getElementById('pieChart').getContext('2d');
+import { SalesData, InventoryData, EmployeesData } from "./storage.js";
 
-//  sales data
-// // [
-//     {
-//         "id": 1769086995428,
-//         "product": "asd",
-//         "quantity": "10",
-//         "unitPrice": 200003,
+// DOM Elements for Stats
+const totalSalesValue = document.getElementById('total_sales_value');
+const totalSalesCount = document.getElementById('total_sales_count');
+const totalProductsValue = document.getElementById('total_products_value');
+const lowStockValue = document.getElementById('low_stock_value');
+const activeEmployeesValue = document.getElementById('active_employees_value');
 
-//         "total": 2000030,
-//         "currentTimeStamp": "2026-01-22T13:03:15.428Z"
-//     }
-// ]
-const labels = [...new Set(SalesData.map((item) => item.product))];
+// Charts Context
+const ctx = document.getElementById('barChart');
+const ctx2 = document.getElementById('pieChart');
 
-// console.log(labels);
 
-const value = labels.map(label => {
-    return SalesData.filter(item => item.product === label).reduce((acc, item) => acc + item.quantity, 0)
-})
 
-new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: labels,
-        datasets: [{
-            label: 'Sales',
-            data: value,
-            backgroundColor: 'rgba(193, 156, 241, 0.66)',
-            borderColor: 'rgba(0, 0, 0, 1)',
-            borderWidth: 1,
-            borderRadius: 10,
-        }]
-    },
-    options: {
-        plugins: {
-            title: {
-                display: true,
-                text: 'Sales'
-            }
+/**
+ * Render Bar Chart showing Sales Quantity by Product
+ */
+function renderSalesChart() {
+    if (!ctx) return;
+
+    const labels = [...new Set(SalesData.map((item) => item.product))];
+    const values = labels.map(label => {
+        return SalesData.filter(item => item.product === label).reduce((acc, item) => acc + (parseFloat(item.quantity) || 0), 0)
+    });
+
+    // Check if labels/values exist to avoid empty chart issues
+    if (labels.length === 0) {
+        ctx.parentElement.innerHTML = "<p style='text-align:center; padding: 20px; color: #64748b;'>No sales data available</p>";
+        return;
+    }
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Quantity Sold',
+                data: values,
+                backgroundColor: '#38bdf8',
+                borderRadius: 8,
+                barThickness: 'flex',
+                maxBarThickness: 40
+            }]
         },
-        scales: {
-            y: {
-                beginAtZero: true,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#f1f5f9' },
+                    ticks: { color: '#64748b' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#64748b' }
+                }
             }
         }
-    }
-})
+    });
+}
 
 
-//  for pi chart according to inventart category
 
-
-const category = [...new Set(InventoryData.map((item) => item.productCategory))];
-
-
-new Chart(ctx2, {
-    type: 'pie',
-    data: category,
-})
-
+// Initial Render
+document.addEventListener('DOMContentLoaded', () => {
+    renderSalesChart();
+});
