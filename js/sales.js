@@ -228,9 +228,11 @@ add_sales_form.addEventListener("submit", (e) => {
   }
   // Finds the index of the product to update it in the main InventoryData array
   const index_number = InventoryData.findIndex(
-    (item) => item.id === parseInt(selectedProduct),
+    (item) => item.id === selectedProduct.id,
   );
-  InventoryData[index_number] = selectedProduct;
+  if (index_number !== -1) {
+    InventoryData[index_number] = selectedProduct;
+  }
   // Saves the updated inventory data to local storage
   localStorage.setItem(
     "InventoryData",
@@ -240,4 +242,31 @@ add_sales_form.addEventListener("submit", (e) => {
   // UI Cleanup: close the modal and reset the form fields
   add_sales_dialog.close();
   add_sales_form.reset();
+  renderSales();
 });
+
+/**
+ * Renders the sales history table using the template tag defined in HTML.
+ */
+function renderSales() {
+  salesHistoryTbody.innerHTML = "";
+  const template = document.getElementById("sales_data_template");
+
+  SalesData.forEach((sale) => {
+    const clone = template.content.cloneNode(true);
+    const cells = clone.querySelectorAll("td");
+
+    // Format the timestamp to a readable date string
+    cells[0].textContent = new Date(sale.currentTimeStamp).toLocaleString();
+    cells[1].textContent = sale.product;
+    cells[2].textContent = sale.quantity;
+    cells[3].textContent = `Rs.${sale.unitPrice}`;
+    cells[4].textContent = `Rs.${sale.total}`;
+
+    salesHistoryTbody.appendChild(clone);
+  });
+}
+
+// Initial render of sales data on page load
+renderSales();
+

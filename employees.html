@@ -99,6 +99,25 @@
                     <button id="addEmplyoeeBtn">Add Employee</button>
                 </div>
             </header>
+
+            <section class="info_cards">
+                <div class="card1">
+                    <h4>Active Employees</h4>
+                    <span id="activeEmp_info"></span>
+                </div>
+                <div class="card2">
+                    <h4>In-Active Employees</h4>
+                    <span id="inActiveEmp_info"></span>
+                </div>
+                <div class="card3">
+                    <h4>Total Departments</h4>
+                    <span id="totalDept_info"></span>
+                </div>
+            </section>
+
+            <section id="employees_list">
+
+            </section>
         </main>
     </div>
     <dialog id="dialog_Emp">
@@ -107,52 +126,96 @@
             <hr>
         </header>
         <form id="emp_add_form">
-            <div>
+            <div class="form_group">
                 <label for="full_name">Full Name*</label>
-                <input type="text" name="full_name" id="full_name" placeholder="full Name" required>
+                <input type="text" name="full_name" id="full_name" placeholder="Full Name" required>
             </div>
-            <div>
+            <div class="form_group">
                 <label for="email">Email*</label>
-                <input type="email" name="email" id="email" placeholder="for eg. abc@gmail.com" required>
+                <input type="email" name="email" id="email" placeholder="e.g. abc@gmail.com" required>
             </div>
-            <div>
-                <div>
-                    <label for="emp_role">
-                        Emplyoee Role:
-                    </label>
+            <div class="form_row">
+                <div class="form_group">
+                    <label for="emp_role">Employee Role</label>
                     <select name="emp_role" id="emp_role"></select>
                 </div>
-                <div>
-                    <label for="emp_department">
-                        Emplyoee Department:
-                    </label>
+                <div class="form_group">
+                    <label for="emp_department">Employee Department</label>
                     <select name="emp_department" id="emp_department"></select>
                 </div>
             </div>
-            <div>
-                <div>
-                    <label for="join_date">
-                        Joining Date:
-                    </label>
+            <div class="form_row">
+                <div class="form_group">
+                    <label for="join_date">Joining Date</label>
                     <input type="date" id="join_date" required />
                 </div>
-                <div>
-                    <label for="emp_status">
-                        Emplyoee Status:
-                    </label>
+                <div class="form_group">
+                    <label for="emp_status">Employee Status</label>
                     <select name="emp_status" id="emp_status">
                         <option value="active">Active</option>
                         <option value="in_active">In-Active</option>
                     </select>
                 </div>
             </div>
-            <div>
-                <button>Cancel</button>
-                <button>Add Employee</button>
+            <div class="form_actions">
+                <button type="button" id="cancel_emp_btn">Cancel</button>
+                <button type="submit" id="submit_emp_btn">Add Employee</button>
             </div>
 
         </form>
     </dialog>
+
+
+    <template id="emp_card_template">
+        <div class="emp_card">
+            <header>
+                <div>
+                    <div class="emp_intials"></div>
+
+                    <div>
+                        <h2 class="emp_name">
+                            <!-- // emplyoee name -->
+
+                        </h2>
+                        <span class="emp_role">
+                            <!-- employee role  -->
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="emp_status">
+                    <!-- status -->
+                </div>
+
+            </header>
+
+            <div>
+                <ul>
+                    <li class="email">
+                        <!-- email -->
+                    </li>
+
+                    <li class="emp_department">
+                        <!-- emp department -->
+                    </li>
+                    <li class="join_date">
+                        <!-- join date -->
+                    </li>
+                </ul>
+            </div>
+            <hr>
+            <div>
+                <button>
+                    Edit
+                </button>
+                <button>
+                    Remove
+                </button>
+            </div>
+        </div>
+    </template>
     <script src="./js/employee.js" type="module"></script>
 </body>
 

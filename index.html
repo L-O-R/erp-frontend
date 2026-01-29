@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NextErp Dashboard</title>
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/dashboard.css">
 </head>
 
 <body>
@@ -40,10 +41,25 @@
             </div>
         </aside>
         <main class="dashboard_main">
-            this will be main
+            <header>
+                <h2>Dashboard</h2>
+                <p>Manage your products and Stocks levels</p>
+            </header>
+
+            <section>
+                <div class="bar_chart">
+                    <canvas id="barChart"></canvas>
+                </div>
+                <div>
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </section>
         </main>
     </div>
+
     <script type="module" src="./js/app.js"></script>
+    <script type="module" src="./js/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 </body>
 
 </html>

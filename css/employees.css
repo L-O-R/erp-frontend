@@ -1,36 +1,224 @@
 #dialog_Emp {
     margin: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 2em;
-    padding: 3em;
-    box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.4);
+    padding: 2.5rem;
     border: none;
-    border-radius: 12px;
-    min-width: 30%;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    max-width: 500px;
+    overflow: hidden;
 }
 
-#dialog_Emp>form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8em;
+#dialog_Emp::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
 }
 
-#dialog_Emp>form div {
+#dialog_Emp header {
+    margin-bottom: 2rem;
+}
+
+#dialog_Emp header h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 0.75rem;
+}
+
+#dialog_Emp header hr {
+    border: 0;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+#emp_add_form {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 1.5rem;
+}
+
+#emp_add_form .form_group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#emp_add_form .form_row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+#emp_add_form label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+#emp_add_form input,
+#emp_add_form select {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #cbd5e0;
+    background-color: #f8fafc;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+#emp_add_form input:focus,
+#emp_add_form select:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    background-color: #ffffff;
+}
+
+.form_actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.form_actions button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+#cancel_emp_btn {
+    background-color: #f1f5f9;
+    color: #475569;
+}
+
+#cancel_emp_btn:hover {
+    background-color: #e2e8f0;
+    color: #1e293b;
+}
+
+#submit_emp_btn {
+    background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+}
+
+#submit_emp_btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 10px -1px rgba(79, 70, 229, 0.3);
+    opacity: 0.95;
+}
+
+#submit_emp_btn:active {
+    transform: translateY(0);
+}
+
+
+/*  info cards */
+
+.info_cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.info_cards>div {
+    border-left: 3px solid #4f46e5;
+    padding: 2rem 1rem;
+    background-color: white;
+    flex-basis: 30%;
+}
+
+.info_cards>.card2 {
+    border-left: 3px solid #ff0202;
+}
+
+.info_cards>.card3 {
+    border-left: 3px solid #9bff17;
+}
+
+.info_cards>div h4 {
     font-size: 1.2rem;
     font-weight: 400;
+    color: #4a5568;
+}
+
+.info_cards>div span {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #4a5568;
 }
 
 
-#dialog_Emp input,
-#dialog_Emp select {
-    /* all: unset; */
-    /* border: 0; */
-    outline: 0;
-    padding: 0.6em 0.8em;
-    border-radius: 12px;
-    border: 1px solid #ccc;
+/* employees list */
+
+#employees_list {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+
+.emp_card {
+    flex-shrink: 0;
+    flex-basis: calc(100% / 3 - 1rem);
+    background-color: white;
+    border-radius: 15px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.emp_card header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.emp_card header>div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.emp_card header p {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+
+.emp_card header h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.emp_card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin: 1.2rem 0px;
+}
+
+
+.emp_intials {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ffe2e2;
+    color: rgb(0, 0, 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
 }
